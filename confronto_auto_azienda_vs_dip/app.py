@@ -16,9 +16,24 @@ aci_data = load_aci_data()
 with st.sidebar:
     st.header("🛠️ Parametri di Input")
 
+    # Scelta Marca
     marca = st.selectbox("Marca", sorted(aci_data['MARCA'].unique()))
-    modello = st.selectbox("Modello", sorted(aci_data[aci_data['MARCA'] == marca]['MODELLO'].unique()))
-    alimentazione = st.selectbox("Alimentazione", sorted(aci_data[aci_data['MARCA'] == marca]['TIPO_ALIMENTAZIONE'].unique()))
+
+    # Filtra i modelli disponibili per la marca scelta
+    modelli_disponibili = sorted(aci_data[aci_data['MARCA'] == marca]['MODELLO'].unique())
+    modello = st.selectbox("Modello", modelli_disponibili)
+
+    # Filtra l'alimentazione disponibile per la marca e modello scelti
+    alimentazioni_disponibili = sorted(
+        aci_data[
+            (aci_data['MARCA'] == marca) &
+            (aci_data['MODELLO'] == modello)
+        ]['TIPO_ALIMENTAZIONE'].unique()
+    )
+    alimentazione = st.selectbox("Alimentazione", alimentazioni_disponibili)
+
+    # (poi proseguono tutti gli altri input: km, prezzo, ecc.)
+
 
     km_annui = st.number_input("Km percorsi annui", min_value=0, step=1000)
 
